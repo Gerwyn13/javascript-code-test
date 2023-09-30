@@ -27,3 +27,5 @@ const bookStoreBetaBooksByPublisher = await bookStoreBetaClient.getBooks<BookSto
 
 
 // TODO: Add tests
+
+// TODO: How can we set format better?
