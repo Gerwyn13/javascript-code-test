@@ -1,8 +1,8 @@
 import BookSearchApiClient from "./book-search-api-client";
 import BookStoreAlpha, { BookStoreAlphaByAuthorParams } from "./book-store-alpha";
+import BookStoreBeta, { BookStoreBetaByAuthorParams } from "./book-store-beta";
 
 // Book Store Alpha
-
 const bookStoreAlpha = new BookStoreAlpha();
 const bookStoreAlphaClient = new BookSearchApiClient(bookStoreAlpha);
 
@@ -11,8 +11,11 @@ const bookStoreAlphaBooksByAuthor = await bookStoreAlphaClient.getBooks<BookStor
     bookStoreAlpha.getBooksByAuthorParams("Shakespeare")
 );
 
-console.log(bookStoreAlphaBooksByAuthor);
-
 // Book Store Beta
+const bookStoreBeta = new BookStoreBeta();
+const bookStoreBetaClient = new BookSearchApiClient(bookStoreBeta);
 
-// TODO
+const bookStoreBetaBooksByAuthor = await bookStoreBetaClient.getBooks<BookStoreBetaByAuthorParams>(
+    bookStoreBeta.booksByAuthorUrl,
+    bookStoreBeta.getBooksByAuthorParams("Brandon Sanderson", 10, "xml")
+);
