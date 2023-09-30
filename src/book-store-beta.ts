@@ -1,5 +1,4 @@
-import { ValidApiFormats } from "./book-search-api-client";
-import { Book, IBookStore } from "./book-store";
+import { Book, IBookStore, ValidApiFormats } from "./book-store";
 
 export interface BookStoreBetaByAuthorParams {
     authorName: string,
@@ -22,9 +21,18 @@ export interface BookStoreBetaBook {
 }
 
 export default class BookStoreBeta implements IBookStore {
+    private _format: ValidApiFormats;
     private _baseUrl: string = "http://api.book-store-beta-example.com/";
     private _booksByAuthorUrl: string = `${this._baseUrl}author`;
     private _booksByPublisherUrl: string = `${this._baseUrl}publisher`;
+
+    constructor(format: ValidApiFormats = "json") {
+        this._format = format;
+    }
+
+    public get format() {
+        return this._format;
+    }
 
     public get booksByAuthorUrl() {
         return this._booksByAuthorUrl;
@@ -34,19 +42,19 @@ export default class BookStoreBeta implements IBookStore {
         return this._booksByPublisherUrl;
     }
 
-    public getBooksByAuthorParams(authorName: string, limit: number = 100, format: ValidApiFormats = "json"): BookStoreBetaByAuthorParams {
+    public getBooksByAuthorParams(authorName: string, limit: number = 100): BookStoreBetaByAuthorParams {
         return {
             authorName,
             limit,
-            format,
+            format: this.format,
         }
     }
 
-    public getBooksByPublisherParams(publisherName: string, limit: number = 100, format: ValidApiFormats = "json"): BookStoreBetaByPublisherParams {
+    public getBooksByPublisherParams(publisherName: string, limit: number = 100): BookStoreBetaByPublisherParams {
         return {
             publisherName,
             limit,
-            format,
+            format: this.format,
         }
     }
 

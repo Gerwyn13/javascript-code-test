@@ -2,12 +2,10 @@ import axios from 'axios';
 import * as xmlToJs from 'xml-js';
 import { Book, IBookStore } from './book-store';
 
-export type ValidApiFormats = "json" | "xml";
-
 export default class BookSearchApiClient {
     constructor(private bookStore: IBookStore) { }
 
-    public async getBooks<T>(url: string, params: T, format: ValidApiFormats = "json"): Promise<Book[]> {
+    public async getBooks<T>(url: string, params: T): Promise<Book[]> {
         try {
             const response = await axios.get(
                 url,
@@ -16,7 +14,7 @@ export default class BookSearchApiClient {
 
             let data = response.data;
 
-            if (format === "xml") {
+            if (this.bookStore.format === "xml") {
                 data = xmlToJs.xml2js(data, { compact: true });
             }
 

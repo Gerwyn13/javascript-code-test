@@ -1,4 +1,7 @@
+export type ValidApiFormats = "json" | "xml";
+
 export interface IBookStore {
+    format: ValidApiFormats;
     convertRawDataToBooks: (rawBooks: any[]) => Book[];
 }
 

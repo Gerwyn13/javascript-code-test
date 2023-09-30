@@ -1,5 +1,4 @@
-import { ValidApiFormats } from "./book-search-api-client";
-import { Book, IBookStore } from "./book-store";
+import { Book, IBookStore, ValidApiFormats } from "./book-store";
 
 export interface BookStoreAlphaByAuthorParams {
     q: string,
@@ -20,18 +19,27 @@ export interface BookStoreAlphaBook {
 }
 
 export default class BookStoreAlpha implements IBookStore {
+    private _format: ValidApiFormats;
     private _baseUrl: string = "http://api.book-store-alpha-example.com/";
     private _booksByAuthorUrl: string = `${this._baseUrl}by-author`;
+
+    constructor(format: ValidApiFormats = "json") {
+        this._format = format;
+    }
+
+    public get format() {
+        return this._format;
+    }
 
     public get booksByAuthorUrl() {
         return this._booksByAuthorUrl;
     }
 
-    public getBooksByAuthorParams(authorName: string, limit: number = 100, format: ValidApiFormats = "json"): BookStoreAlphaByAuthorParams {
+    public getBooksByAuthorParams(authorName: string, limit: number = 100): BookStoreAlphaByAuthorParams {
         return {
             q: authorName,
             limit,
-            format,
+            format: this.format,
         }
     }
 

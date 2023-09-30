@@ -12,20 +12,18 @@ const bookStoreAlphaBooksByAuthor = await bookStoreAlphaClient.getBooks<BookStor
 );
 
 // Book Store Beta
-const bookStoreBeta = new BookStoreBeta();
+const bookStoreBeta = new BookStoreBeta("xml");
 const bookStoreBetaClient = new BookSearchApiClient(bookStoreBeta);
 
 const bookStoreBetaBooksByAuthor = await bookStoreBetaClient.getBooks<BookStoreBetaByAuthorParams>(
     bookStoreBeta.booksByAuthorUrl,
-    bookStoreBeta.getBooksByAuthorParams("Brandon Sanderson", 10, "xml"),
+    bookStoreBeta.getBooksByAuthorParams("Brandon Sanderson", 10),
 );
 
 const bookStoreBetaBooksByPublisher = await bookStoreBetaClient.getBooks<BookStoreBetaByPublisherParams>(
     bookStoreBeta.booksByPublisherUrl,
-    bookStoreBeta.getBooksByPublisherParams("Puffin", 50),
+    bookStoreBeta.getBooksByPublisherParams("Puffin"),
 );
 
 
 // TODO: Add tests
-
-// TODO: How can we set format better?
