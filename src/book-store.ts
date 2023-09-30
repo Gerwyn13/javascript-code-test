@@ -1,5 +1,11 @@
-export type BookStores = "Book Store Alpha" | "Book Store Beta";
-
 export interface IBookStore {
-    booksByAuthorUrl: string;
+    convertRawDataToBooks: (rawBooks: any[]) => Book[];
+}
+
+export interface Book {
+    title: string,
+    author: string,
+    isbn: string,
+    quantity: number,
+    price: string,
 }

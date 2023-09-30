@@ -1,21 +1,30 @@
 import axios from 'axios';
-import { IBookStore } from './book-store';
+import * as xmlToJs from 'xml-js';
+import { Book, IBookStore } from './book-store';
 
 export type ValidApiFormats = "json" | "xml";
 
 export default class BookSearchApiClient {
-  private bookStore: IBookStore;
+    constructor(private bookStore: IBookStore) { }
 
-  constructor(bookStore: IBookStore) {
-    this.bookStore = bookStore;
-  }
+    public async getBooks<T>(url: string, params: T, format: ValidApiFormats = "json"): Promise<Book[]> {
+        try {
+            const response = await axios.get(
+                url,
+                { params }
+            );
 
-  public async getBooksByAuthor<T>(params: T) {
-    // TODO:
-    const byAuthorResponse = await axios.get(
-      this.bookStore.booksByAuthorUrl,
-      { params }
-    );
-  }
+            let data = response.data;
+
+            if (format === "xml") {
+                data = xmlToJs.xml2js(data, { compact: true });
+            }
+
+            return this.bookStore.convertRawDataToBooks(data);
+        } catch (error) {
+            console.log(error);
+            throw new Error(error);
+        }
+    }
 }
 

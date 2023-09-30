@@ -1,7 +1,18 @@
 import BookSearchApiClient from "./book-search-api-client";
-import BookStoreAlpha, { BookStoreAlphaParams } from "./book-store-alpha";
+import BookStoreAlpha, { BookStoreAlphaByAuthorParams } from "./book-store-alpha";
 
-const bookStoreAlphaClient = new BookSearchApiClient(new BookStoreAlpha());
-const booksByAuthor = await bookStoreAlphaClient.getBooksByAuthor<BookStoreAlphaParams>(
-    { q: "Shakespeare", format: "json", limit: 100 }
+// Book Store Alpha
+
+const bookStoreAlpha = new BookStoreAlpha();
+const bookStoreAlphaClient = new BookSearchApiClient(bookStoreAlpha);
+
+const bookStoreAlphaBooksByAuthor = await bookStoreAlphaClient.getBooks<BookStoreAlphaByAuthorParams>(
+    bookStoreAlpha.booksByAuthorUrl,
+    bookStoreAlpha.getBooksByAuthorParams("Shakespeare")
 );
+
+console.log(bookStoreAlphaBooksByAuthor);
+
+// Book Store Beta
+
+// TODO
