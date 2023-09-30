@@ -8,7 +8,7 @@ const bookStoreAlphaClient = new BookSearchApiClient(bookStoreAlpha);
 
 const bookStoreAlphaBooksByAuthor = await bookStoreAlphaClient.getBooks<BookStoreAlphaByAuthorParams>(
     bookStoreAlpha.booksByAuthorUrl,
-    bookStoreAlpha.getBooksByAuthorParams("Shakespeare")
+    bookStoreAlpha.getBooksByAuthorParams("Shakespeare"),
 );
 
 // Book Store Beta
@@ -17,10 +17,10 @@ const bookStoreBetaClient = new BookSearchApiClient(bookStoreBeta);
 
 const bookStoreBetaBooksByAuthor = await bookStoreBetaClient.getBooks<BookStoreBetaByAuthorParams>(
     bookStoreBeta.booksByAuthorUrl,
-    bookStoreBeta.getBooksByAuthorParams("Brandon Sanderson", 10, "xml")
+    bookStoreBeta.getBooksByAuthorParams("Brandon Sanderson", 10, "xml"),
 );
 
 const bookStoreBetaBooksByPublisher = await bookStoreBetaClient.getBooks<BookStoreBetaByPublisherParams>(
     bookStoreBeta.booksByPublisherUrl,
-    bookStoreBeta.getBooksByPublisherParams("Puffin")
+    bookStoreBeta.getBooksByPublisherParams("Puffin"),
 );
