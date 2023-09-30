@@ -22,5 +22,8 @@ const bookStoreBetaBooksByAuthor = await bookStoreBetaClient.getBooks<BookStoreB
 
 const bookStoreBetaBooksByPublisher = await bookStoreBetaClient.getBooks<BookStoreBetaByPublisherParams>(
     bookStoreBeta.booksByPublisherUrl,
-    bookStoreBeta.getBooksByPublisherParams("Puffin"),
+    bookStoreBeta.getBooksByPublisherParams("Puffin", 50),
 );
+
+
+// TODO: Add tests
