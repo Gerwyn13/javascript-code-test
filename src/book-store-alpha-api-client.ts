@@ -1,7 +1,7 @@
 import axios from "axios";
 import * as xml2js from "xml-js";
-import { logger } from "./logger";
 import { Book, ValidApiFormats } from "./book-store";
+import { handleAxiosError } from "./axios-helper";
 
 export interface BookStoreAlphaBook {
     book: {
@@ -15,6 +15,11 @@ export interface BookStoreAlphaBook {
     };
 }
 
+/**
+ * API Client for accessing the Book Store Alpha API.
+ * Defaults to 'json' request.
+ * Throws error if request fails for any reason.
+ */
 export default class BookStoreAlphaApiClient {
     private baseUrl: string = "http://api.book-store-alpha-example.com/";
     private booksByAuthorUrl: string = `${this.baseUrl}by-author`;
@@ -22,6 +27,12 @@ export default class BookStoreAlphaApiClient {
 
     constructor(private format: ValidApiFormats = "json") {}
 
+    /**
+     * Gets books from the Book Store Alpha API by author name.
+     * @param authorName The name of the author to query by.
+     * @param limit Maximum number of books to return. Defaults to 100.
+     * @returns A list of Books filtered by author name.
+     */
     public async getBooksByAuthor(authorName: string, limit = 100): Promise<Book[]> {
         return await this.getBooks(this.booksByAuthorUrl, {
             q: authorName,
@@ -30,14 +41,26 @@ export default class BookStoreAlphaApiClient {
         });
     }
 
-    public async getBooksByPublisher(publisher: string, limit = 100): Promise<Book[]> {
+    /**
+     * Gets books from the Book Store Alpha API by publisher name.
+     * @param publisherName The name of the publisher to query by.
+     * @param limit Maximum number of books to return. Defaults to 100.
+     * @returns A list of Books filtered by publisher name.
+     */
+    public async getBooksByPublisher(publisherName: string, limit = 100): Promise<Book[]> {
         return await this.getBooks(this.booksByPublisherUrl, {
-            q: publisher,
+            q: publisherName,
             limit,
             format: this.format,
         });
     }
 
+    /**
+     * Gets books from a specified URL endpoint using the specified params.
+     * @param url The url of the GET request
+     * @param params The params for the GET request
+     * @returns A list of Books
+     */
     private async getBooks(url: string, params: any): Promise<Book[]> {
         try {
             const response = await axios.get(url, { params });
@@ -45,24 +68,18 @@ export default class BookStoreAlphaApiClient {
             if (this.format === "xml") {
                 return this.convertXmlToBooks(response.data);
             }
-            return this.convertJsonToBooks(response.data);
+            return this.convertDataToBooks(response.data);
         } catch (error) {
-            if (error.response) {
-                // Server responded with status code not in 2xx range
-                logger.error(error.response);
-                throw new Error(error.response);
-            } else if (error.request) {
-                // Request made, no response received
-                logger.error(error.request);
-                throw new Error(error.request);
-            }
-            // All other errors
-            logger.error(error.message);
-            throw new Error(error.message);
+            handleAxiosError(error);
         }
     }
 
-    private convertJsonToBooks(rawBooks: BookStoreAlphaBook[]): Book[] {
+    /**
+     * Takes the raw book data from the API and converts into our specified Book format.
+     * @param rawBooks The books in a format returned by the API.
+     * @returns The Books as a list in the expected format.
+     */
+    private convertDataToBooks(rawBooks: BookStoreAlphaBook[]): Book[] {
         return rawBooks.map((item: BookStoreAlphaBook): Book => {
             return {
                 title: item.book.title,
@@ -74,8 +91,13 @@ export default class BookStoreAlphaApiClient {
         });
     }
 
+    /**
+     * Takes the raw xml book data from the API and converts into our specified Book format.
+     * @param rawXmlBooks The XML to convert.
+     * @returns The Books as a list in the expected format.
+     */
     private convertXmlToBooks(rawXmlBooks: any): Book[] {
-        // Without knowing the exact data structure, it's difficult to write an XML parser
+        // Note: Without knowing the exact data structure, it's difficult to write an XML parser
         const booksAsJs = xml2js.xml2js(rawXmlBooks, { compact: true }) as any;
 
         if (booksAsJs.books.book[0]) {

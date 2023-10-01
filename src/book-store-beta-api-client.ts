@@ -1,7 +1,6 @@
 import axios from "axios";
-import * as xmlToJs from "xml-js";
-import { logger } from "./logger";
 import { Book, ValidApiFormats } from "./book-store";
+import { handleAxiosError } from "./axios-helper";
 
 interface BookStoreBetaBook {
     bookTitle: string;
@@ -11,19 +10,36 @@ interface BookStoreBetaBook {
     stockPrice: string;
 }
 
+/**
+ * API Client for accessing the Book Store Beta API.
+ * Defaults to 'json' request.
+ * Throws error if request fails for any reason.
+ */
 export default class BookStoreBetaApiClient {
     private baseUrl: string = "http://api.book-store-beta-example.com/";
     private booksByAuthorUrl: string = `${this.baseUrl}author`;
 
     constructor(private format: ValidApiFormats = "json") {}
 
-    public async getBooksByAuthor(authorName: string, limit = 100): Promise<Book[]> {
+    /**
+     * Gets books from the Book Store Beta API by author name.
+     * @param authorName The name of the author to query by.
+     * @param limit Maximum number of books to return. Defaults to 50.
+     * @returns A list of Books filtered by author name.
+     */
+    public async getBooksByAuthor(authorName: string, limit = 50): Promise<Book[]> {
         return await this.getBooks(this.booksByAuthorUrl, {
             authorName,
             limit,
         });
     }
 
+    /**
+     * Gets books from a specified URL endpoint using the specified params.
+     * @param url The url of the GET request
+     * @param params The params for the GET request
+     * @returns A list of Books
+     */
     private async getBooks(url: string, params: any): Promise<Book[]> {
         try {
             const response = await axios.get(url, {
@@ -31,20 +47,21 @@ export default class BookStoreBetaApiClient {
                 headers: { "Content-Type": `application/${this.format}` },
             });
 
-            let data = response.data;
-
             if (this.format === "xml") {
-                data = xmlToJs.xml2js(data, { compact: true });
+                return this.convertXmlToBooks(response.data);
             }
-
-            return this.convertRawDataToBooks(data);
+            return this.convertDataToBooks(response.data);
         } catch (error) {
-            logger.log(error);
-            throw new Error(error);
+            handleAxiosError(error);
         }
     }
 
-    private convertRawDataToBooks(rawBooks: BookStoreBetaBook[]): Book[] {
+    /**
+     * Takes the raw book data from the API and converts into our specified Book format.
+     * @param rawBooks The books in a format returned by the API.
+     * @returns The Books as a list in the expected format.
+     */
+    private convertDataToBooks(rawBooks: BookStoreBetaBook[]): Book[] {
         return rawBooks.map((item: BookStoreBetaBook): Book => {
             return {
                 title: item.bookTitle,
@@ -54,5 +71,15 @@ export default class BookStoreBetaApiClient {
                 price: item.stockPrice,
             };
         });
+    }
+
+    /**
+     * Takes the raw xml book data from the API and converts into our specified Book format.
+     * @param rawXmlBooks The XML to convert.
+     * @returns The Books as a list in the expected format.
+     */
+    private convertXmlToBooks(rawXmlBooks: any): Book[] {
+        // Note: Without knowing the exact data structure, it's difficult to write an XML parser
+        throw new Error("Function not implemented on purpose");
     }
 }
