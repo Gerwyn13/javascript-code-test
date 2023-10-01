@@ -1,6 +1,6 @@
 import axios from "axios";
-import { Book, ValidApiFormats } from "./book-store";
-import { handleAxiosError } from "./axios-helper";
+import { Book, ValidApiFormats } from "../book-store";
+import { handleAxiosError } from "../../helpers/axios-helper";
 
 interface BookStoreBetaBook {
     bookTitle: string;

@@ -1,7 +1,7 @@
 import axios from "axios";
 import * as xml2js from "xml-js";
-import { Book, ValidApiFormats } from "./book-store";
-import { handleAxiosError } from "./axios-helper";
+import { Book, ValidApiFormats } from "../book-store";
+import { handleAxiosError } from "../../helpers/axios-helper";
 
 export interface BookStoreAlphaBook {
     book: {

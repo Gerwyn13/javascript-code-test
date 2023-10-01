@@ -1,5 +1,5 @@
-import BookStoreAlphaApiClient from "./book-store-alpha-api-client";
-import BookStoreBetaApiClient from "./book-store-beta-api-client";
+import BookStoreAlphaApiClient from "./book-stores/book-store-alpha/book-store-alpha-api-client";
+import BookStoreBetaApiClient from "./book-stores/book-store-beta/book-store-beta-api-client";
 
 // Note: You would need additional error handling in here because the API clients throw when an error occurs. Omitting for simplicity.
 

@@ -1,6 +1,6 @@
 import axios from "axios";
 import * as xml2js from "xml-js";
-import { Book } from "./book-store";
+import { Book } from "../book-store";
 import BookStoreAlphaApiClient, { BookStoreAlphaBook } from "./book-store-alpha-api-client";
 
 jest.mock("axios");
