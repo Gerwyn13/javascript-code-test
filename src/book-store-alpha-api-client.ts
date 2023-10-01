@@ -1,17 +1,17 @@
-import axios from 'axios';
-import * as xmlToJs from 'xml-js';
+import axios from "axios";
+import * as xmlToJs from "xml-js";
 import { Book, ValidApiFormats } from "./book-store";
 
 interface BookStoreAlphaBook {
     book: {
-        title: string,
-        author: string,
-        isbn: string,
-    },
+        title: string;
+        author: string;
+        isbn: string;
+    };
     stock: {
-        quantity: number,
-        price: string,
-    }
+        quantity: number;
+        price: string;
+    };
 }
 
 export default class BookStoreAlphaApiClient {
@@ -19,7 +19,7 @@ export default class BookStoreAlphaApiClient {
     private booksByAuthorUrl: string = `${this.baseUrl}by-author`;
     private booksByPublisherUrl: string = `${this.baseUrl}by-publisher`;
 
-    constructor(private format: ValidApiFormats = "json") { }
+    constructor(private format: ValidApiFormats = "json") {}
 
     public async getBooksByAuthor(authorName: string, limit = 100): Promise<Book[]> {
         try {
@@ -49,10 +49,7 @@ export default class BookStoreAlphaApiClient {
 
     private async getBooks(url: string, params: any): Promise<Book[]> {
         try {
-            const response = await axios.get(
-                url,
-                { params }
-            );
+            const response = await axios.get(url, { params });
 
             let data = response.data;
 
@@ -75,7 +72,7 @@ export default class BookStoreAlphaApiClient {
                 isbn: item.book.isbn,
                 quantity: item.stock.quantity,
                 price: item.stock.price,
-            }
+            };
         });
     }
 }

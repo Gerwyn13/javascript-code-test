@@ -1,20 +1,20 @@
-import axios from 'axios';
-import * as xmlToJs from 'xml-js';
+import axios from "axios";
+import * as xmlToJs from "xml-js";
 import { Book, ValidApiFormats } from "./book-store";
 
 interface BookStoreBetaBook {
-    bookTitle: string,
-    bookAuthor: string,
-    bookIsbn: string,
-    stockQuantity: number,
-    stockPrice: string,
+    bookTitle: string;
+    bookAuthor: string;
+    bookIsbn: string;
+    stockQuantity: number;
+    stockPrice: string;
 }
 
 export default class BookStoreBetaApiClient {
     private baseUrl: string = "http://api.book-store-beta-example.com/";
     private booksByAuthorUrl: string = `${this.baseUrl}author`;
 
-    constructor(private format: ValidApiFormats = "json") { }
+    constructor(private format: ValidApiFormats = "json") {}
 
     public async getBooksByAuthor(authorName: string, limit = 100): Promise<Book[]> {
         try {
@@ -30,13 +30,10 @@ export default class BookStoreBetaApiClient {
 
     private async getBooks(url: string, params: any): Promise<Book[]> {
         try {
-            const response = await axios.get(
-                url,
-                {
-                    params,
-                    headers: { "Content-Type": `application/${this.format}` }
-                }
-            );
+            const response = await axios.get(url, {
+                params,
+                headers: { "Content-Type": `application/${this.format}` },
+            });
 
             let data = response.data;
 
@@ -59,7 +56,7 @@ export default class BookStoreBetaApiClient {
                 isbn: item.bookIsbn,
                 quantity: item.stockQuantity,
                 price: item.stockPrice,
-            }
+            };
         });
     }
 }
