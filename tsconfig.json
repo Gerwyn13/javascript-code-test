@@ -1,7 +1,8 @@
 {
     "compilerOptions": {
-        "outDir": "dist",
+        "outDir": "lib",
         "target": "ES2020",
+        "types": ["node", "jest"],
         "module": "ESNext",
         "moduleResolution": "Node",
         "noImplicitAny": true,
