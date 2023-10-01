@@ -1,5 +1,6 @@
 import axios from "axios";
 import * as xmlToJs from "xml-js";
+import { logger } from "./logger";
 import { Book, ValidApiFormats } from "./book-store";
 
 interface BookStoreBetaBook {
@@ -17,15 +18,10 @@ export default class BookStoreBetaApiClient {
     constructor(private format: ValidApiFormats = "json") {}
 
     public async getBooksByAuthor(authorName: string, limit = 100): Promise<Book[]> {
-        try {
-            return await this.getBooks(this.booksByAuthorUrl, {
-                authorName,
-                limit,
-            });
-        } catch (error) {
-            console.log(error);
-            throw new Error(error);
-        }
+        return await this.getBooks(this.booksByAuthorUrl, {
+            authorName,
+            limit,
+        });
     }
 
     private async getBooks(url: string, params: any): Promise<Book[]> {
@@ -43,7 +39,7 @@ export default class BookStoreBetaApiClient {
 
             return this.convertRawDataToBooks(data);
         } catch (error) {
-            console.log(error);
+            logger.log(error);
             throw new Error(error);
         }
     }

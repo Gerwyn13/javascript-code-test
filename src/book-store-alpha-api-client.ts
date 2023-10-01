@@ -1,5 +1,6 @@
 import axios from "axios";
 import * as xmlToJs from "xml-js";
+import { logger } from "./logger";
 import { Book, ValidApiFormats } from "./book-store";
 
 interface BookStoreAlphaBook {
@@ -22,29 +23,19 @@ export default class BookStoreAlphaApiClient {
     constructor(private format: ValidApiFormats = "json") {}
 
     public async getBooksByAuthor(authorName: string, limit = 100): Promise<Book[]> {
-        try {
-            return await this.getBooks(this.booksByAuthorUrl, {
-                q: authorName,
-                limit,
-                format: this.format,
-            });
-        } catch (error) {
-            console.log(error);
-            throw new Error(error);
-        }
+        return await this.getBooks(this.booksByAuthorUrl, {
+            q: authorName,
+            limit,
+            format: this.format,
+        });
     }
 
     public async getBooksByPublisher(publisher: string, limit = 100): Promise<Book[]> {
-        try {
-            return await this.getBooks(this.booksByPublisherUrl, {
-                q: publisher,
-                limit,
-                format: this.format,
-            });
-        } catch (error) {
-            console.log(error);
-            throw new Error(error);
-        }
+        return await this.getBooks(this.booksByPublisherUrl, {
+            q: publisher,
+            limit,
+            format: this.format,
+        });
     }
 
     private async getBooks(url: string, params: any): Promise<Book[]> {
@@ -59,7 +50,7 @@ export default class BookStoreAlphaApiClient {
 
             return this.convertRawDataToBooks(data);
         } catch (error) {
-            console.log(error);
+            logger.error(error);
             throw new Error(error);
         }
     }
