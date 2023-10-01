@@ -67,4 +67,10 @@ describe("Testing book-store-alpha-api-client.ts", () => {
         // Assert
         expect(actualBooks).toEqual(expectedBooks);
     });
+
+    // More tests to implement:
+    //   - Test other query endpoints e.g. get by publisher etc.
+    //   - Test what happens when axios requests throw different errors.
+    //   - Test different XML formats.
+    //   - Test what happens when the get returns 0 items (both xml and json).
 });
