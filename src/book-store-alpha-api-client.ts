@@ -3,7 +3,7 @@ import * as xmlToJs from "xml-js";
 import { logger } from "./logger";
 import { Book, ValidApiFormats } from "./book-store";
 
-interface BookStoreAlphaBook {
+export interface BookStoreAlphaBook {
     book: {
         title: string;
         author: string;
