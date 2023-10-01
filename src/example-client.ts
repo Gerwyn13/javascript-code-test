@@ -1,29 +1,14 @@
-import BookSearchApiClient from "./book-search-api-client";
-import BookStoreAlpha, { BookStoreAlphaByAuthorParams } from "./book-store-alpha";
-import BookStoreBeta, { BookStoreBetaByAuthorParams, BookStoreBetaByPublisherParams } from "./book-store-beta";
+import BookStoreAlphaApiClient from "./book-store-alpha-api-client";
+import BookStoreBetaApiClient from "./book-store-beta-api-client";
 
-// Book Store Alpha
-const bookStoreAlpha = new BookStoreAlpha();
-const bookStoreAlphaClient = new BookSearchApiClient(bookStoreAlpha);
+// Book Store Alpha Example
+const bookStoreAlphaClient = new BookStoreAlphaApiClient();
+const bookStoreAlphaBooksByAuthor = await bookStoreAlphaClient.getBooksByAuthor("Shakespeare");
+const bookStoreAlphaBooksByPublisher = await bookStoreAlphaClient.getBooksByPublisher("Puffin", 10);
 
-const bookStoreAlphaBooksByAuthor = await bookStoreAlphaClient.getBooks<BookStoreAlphaByAuthorParams>(
-    bookStoreAlpha.booksByAuthorUrl,
-    bookStoreAlpha.getBooksByAuthorParams("Shakespeare"),
-);
-
-// Book Store Beta
-const bookStoreBeta = new BookStoreBeta("xml");
-const bookStoreBetaClient = new BookSearchApiClient(bookStoreBeta);
-
-const bookStoreBetaBooksByAuthor = await bookStoreBetaClient.getBooks<BookStoreBetaByAuthorParams>(
-    bookStoreBeta.booksByAuthorUrl,
-    bookStoreBeta.getBooksByAuthorParams("Brandon Sanderson", 10),
-);
-
-const bookStoreBetaBooksByPublisher = await bookStoreBetaClient.getBooks<BookStoreBetaByPublisherParams>(
-    bookStoreBeta.booksByPublisherUrl,
-    bookStoreBeta.getBooksByPublisherParams("Puffin"),
-);
-
+// Example of additional book store and requesting a different content type
+const bookStoreBetaClient = new BookStoreBetaApiClient("xml");
+const bookStoreBetaBooksByAuthor = await bookStoreBetaClient.getBooksByAuthor("Shakespeare", 1);
 
 // TODO: Add tests
+// TODO: Add logger
